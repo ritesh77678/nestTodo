@@ -8,6 +8,7 @@ export class Todo extends BaseEntity {
     @Column({nullable: false})
     task: string
 
+    @Column({nullable: false})
     @ManyToOne(() => User, user => user.todos, {onDelete: 'CASCADE'})
     user: string
 }

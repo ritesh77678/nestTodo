@@ -11,33 +11,32 @@ export class UserService {
     
     constructor(@InjectRepository(User) private readonly userRepo: Repository<User>){}
 
-    async updateUser(updateData: UpdateUserDto, req: Request){
+    async updateUser(updateData: UpdateUserDto, id: string){
         
-        // if (!(await this.userRepo.findOne({where: {id}}))) throw new NotFoundException("User does not exist with the corresponding id")
-        // console.log(req.user)
+        if (!(await this.userRepo.findOne({where: {id}}))) throw new NotFoundException("User does not exist with the corresponding id")
 
-        // const existingUser = await this.userRepo.findOne({where: {id}})
-        // if (!existingUser) throw new NotFoundException("User does not exist with the corresponding id")
+        const existingUser = await this.userRepo.findOne({where: {id}})
+        if (!existingUser) throw new NotFoundException("User does not exist with the corresponding id")
 
-        // if (updateData.username){
-        //     const userWithSameUsername = await this.userRepo.findOne({where: {username: updateData.username}}) 
-        //     if (userWithSameUsername && userWithSameUsername.id != id) throw new ConflictException("Username is already used")
-        // }
+        if (updateData.username){
+            const userWithSameUsername = await this.userRepo.findOne({where: {username: updateData.username}}) 
+            if (userWithSameUsername && userWithSameUsername.id != id) throw new ConflictException("Username is already used")
+        }
         
-        // if (updateData.email){
-        //     const userWithSameEmail = await this.userRepo.findOne({where: {email: updateData.email}})
-        //     if (userWithSameEmail && userWithSameEmail.id != id) throw new ConflictException("Email is already used")
-        // }
+        if (updateData.email){
+            const userWithSameEmail = await this.userRepo.findOne({where: {email: updateData.email}})
+            if (userWithSameEmail && userWithSameEmail.id != id) throw new ConflictException("Email is already used")
+        }
         
-        // await this.userRepo.update(
-        //     {id},
-        //     updateData    
-        // )
+        await this.userRepo.update(
+            {id},
+            updateData    
+        )
 
-        // const updatedUser = await this.userRepo.findOne({where: {id}})
-        // if(!updatedUser) throw new InternalServerErrorException("Something went wrong, please try again")
+        const updatedUser = await this.userRepo.findOne({where: {id}})
+        if(!updatedUser) throw new InternalServerErrorException("Something went wrong, please try again")
         
-        // return new ApiResponse(200, updatedUser, "User updated successfully")
+        return new ApiResponse<User>(200, updatedUser, "User updated successfully")
     }
 
 
@@ -48,7 +47,7 @@ export class UserService {
 
         if(!user) throw new NotFoundException("User not found with the provided id")
 
-        return new ApiResponse(200, user)
+        return new ApiResponse<User>(200, user)
     }
 
     async getAll(){
@@ -56,7 +55,7 @@ export class UserService {
         
         if(!response.length) throw new NotFoundException("Cannot find any user")
 
-        return new ApiResponse(200, response, "List of users")
+        return new ApiResponse<User[]>(200, response, "List of users")
     }
 
     async delete(id: string){
@@ -64,6 +63,6 @@ export class UserService {
         
         if (!response.affected) throw new NotFoundException("User does not exist with the provided id")
         
-        return new ApiResponse(200, {}, "User deleted")
+        return new ApiResponse<null>(200, null, "User deleted")
     }
 }

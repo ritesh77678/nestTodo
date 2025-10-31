@@ -19,8 +19,8 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @Put("/:id")
     async update(@Body() updateUser: UpdateUserDto, @Req() req: Request){
-        // console.log(req.user)
-        return this.userService.updateUser(updateUser, req);
+        console.log(req.user.id)
+        return this.userService.updateUser(updateUser, req.user.id);
     }
 
     @UseGuards(JwtAuthGuard)

@@ -1,13 +1,17 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm"
+import { Module } from "@nestjs/common";
+import { TodoService } from "./todo.service";
+import { TodoController } from "./todo.controller";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Todo } from "./todo.entity";
+import { UserService } from "../user/user.service";
+import { UserModule } from "../user/user.module";
 
-export class Todo {
-
-    @PrimaryGeneratedColumn()
-    id: string
-
-    @Column({nullable: false})
-    task: string
-
-    
-    userId: number
-}
+@Module({
+    imports: [
+        TypeOrmModule.forFeature([Todo]),
+        UserModule
+    ],
+    providers: [TodoService],
+    controllers: [TodoController],
+})
+export class TodoModule{}

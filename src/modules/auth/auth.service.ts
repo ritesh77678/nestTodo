@@ -19,14 +19,22 @@ export class AuthService {
 
     async register(user: UserRegisterDto){
 
-        const existingUser = await this.userRepo.findOne({
+        const existingUserWithEmail = await this.userRepo.findOne({
             where: [
                 {email: user.email},
-                {password: user.password}
             ]
         })
 
-        if (existingUser) throw new ConflictException("User already exist with the username or email")
+        if (existingUserWithEmail) throw new ConflictException("User already exist with the email")
+
+        const existingUserWithUsername = await this.userRepo.findOne({
+            where: [
+                {username: user.username},
+            ]
+        })
+
+        if (existingUserWithUsername) throw new ConflictException("User already exist with the username")
+
 
         const newUser = await this.userRepo.create({
             email: user.email,
